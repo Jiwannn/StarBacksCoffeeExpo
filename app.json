@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "StarBacks Coffee",
+    "slug": "starbacks-coffee",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.starbacks.coffee"
+    },
+    "android": {
+      "package": "com.anonymous.starbackscoffeeexpo",
+      "adaptiveIcon": {
+        "backgroundColor": "#333333"
+      }
+    },
+    "web": {
+      "favicon": "./assets/logo.jpg"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id-here"
+      }
+    }
+  }
+}
