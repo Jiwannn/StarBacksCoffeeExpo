@@ -1,10 +1,11 @@
+import Constants from 'expo-constants';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBXUKkRqXsAqZ1DQTcqfTA1_uDJShIWkLA",
+  apiKey: "AIzaSyDTjQP2x6qD4ucRAHMC6MwsXgBRPI5t-Gk",
   authDomain: "starbackscoffee.firebaseapp.com",
   projectId: "starbackscoffee",
   storageBucket: "starbackscoffee.firebasestorage.app",
