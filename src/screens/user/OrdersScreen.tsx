@@ -86,7 +86,7 @@ const OrdersScreen = ({ navigation }: any) => {
         </Text>
         <TouchableOpacity
           style={[styles.shopButton, { backgroundColor: colors.primary }]}
-          onPress={() => navigation.navigate('HomeTab')}
+          onPress={() => navigation.getParent()?.navigate('Home')}
         >
           <Text style={styles.shopButtonText}>Start Shopping</Text>
         </TouchableOpacity>

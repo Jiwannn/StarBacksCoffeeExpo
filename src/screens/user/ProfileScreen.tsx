@@ -17,12 +17,9 @@ import { Button } from '../../components/common/Button';
 import { Ionicons } from '@expo/vector-icons';
 import { formatPhoneNumber } from '../../utils/helpers';
 
-// ========== Cloudinary Configuration ==========
-// Replace with your own values:
-const CLOUDINARY_CLOUD_NAME = 'ds3k3thy2';      // e.g., 'dxm3q4r5t'
-const CLOUDINARY_UPLOAD_PRESET = 'expo_uploads';      // the unsigned preset you created
+const CLOUDINARY_CLOUD_NAME = 'ds3k3thy2';
+const CLOUDINARY_UPLOAD_PRESET = 'expo_uploads';
 
-// Function to upload image to Cloudinary
 const uploadToCloudinary = async (uri: string): Promise<string> => {
   const formData = new FormData();
   formData.append('file', {
@@ -213,7 +210,7 @@ const styles = StyleSheet.create({
   avatarContainer: { position: 'relative', marginBottom: 16 },
   avatar: { width: 100, height: 100, borderRadius: 50, alignItems: 'center', justifyContent: 'center' },
   avatarText: { fontSize: 40, fontWeight: 'bold', color: '#FFF' },
-  editIconContainer: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#FF6600', borderRadius: 15, padding: 5 },
+  editIconContainer: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#00704A', borderRadius: 15, padding: 5 },
   editButton: { position: 'absolute', top: 20, right: 20 },
   name: { fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
   email: { fontSize: 14 },

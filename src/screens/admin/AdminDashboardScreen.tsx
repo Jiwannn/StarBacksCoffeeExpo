@@ -5,8 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import { orderService } from '../../services/orderService';
 import { productService } from '../../services/productService';
 import { authService } from '../../services/authService';
@@ -28,6 +30,7 @@ const AdminDashboardScreen = ({ navigation }: any) => {
   const [recentOrders, setRecentOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { colors } = useTheme();
+  const { logout } = useAuth();
 
   useEffect(() => {
     loadDashboardData();
@@ -61,6 +64,13 @@ const AdminDashboardScreen = ({ navigation }: any) => {
     }
   };
 
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Logout', onPress: logout },
+    ]);
+  };
+
   if (loading) {
     return <LoadingSpinner fullScreen />;
   }
@@ -68,10 +78,17 @@ const AdminDashboardScreen = ({ navigation }: any) => {
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.headerTitle, { color: colors.primary }]}>Admin Dashboard</Text>
-        <Text style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
-          Welcome back, Administrator
-        </Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={[styles.headerTitle, { color: colors.primary }]}>Admin Dashboard</Text>
+            <Text style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
+              Welcome back, Administrator
+            </Text>
+          </View>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Ionicons name="log-out-outline" size={28} color={colors.error} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <AdminStats stats={stats} />
@@ -125,6 +142,11 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 16,
   },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -132,6 +154,9 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 14,
     marginTop: 4,
+  },
+  logoutButton: {
+    padding: 8,
   },
   section: {
     margin: 16,

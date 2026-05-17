@@ -1,3 +1,17 @@
 {
-  "devices": []
+  "devices": [
+    {
+      "installationId": "8f2ddd4a-97f8-4e18-9cfc-7a96a8f8c8e4",
+      "lastUsed": 1779015193146
+    },
+    {
+      "installationId": "bcb94f48-b1ca-4696-aa45-9940f6cbf4ba",
+      "lastUsed": 1777257349148
+    }
+  ],
+  "android": [
+    {
+      "package": "com.anonymous.starbackscoffeeexpo"
+    }
+  ]
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "StarBacks Coffee",
-    "slug": "starbacks-coffee",
+    "slug": "starbackscoffeeexpo",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -16,12 +16,10 @@
         "backgroundColor": "#333333"
       }
     },
-    "web": {
-      "favicon": "./assets/logo.jpg"
-    },
+    "web": {},
     "extra": {
       "eas": {
-        "projectId": "starbackscoffee"
+        "projectId": "f362aec5-387b-45b2-8e02-510f0280f3e7"
       }
     }
   }

@@ -11,19 +11,18 @@ import { useCart } from '../../context/CartContext';
 import { CartItemComponent } from '../../components/cart/CartItem';
 import { CartSummary } from '../../components/cart/CartSummary';
 import { Button } from '../../components/common/Button';
-import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Ionicons } from '@expo/vector-icons';
 
 const CartScreen = ({ navigation }: any) => {
   const {
-  cartItems,
-  removeFromCart,
-  updateQuantity,
-  getSubtotal,
-  getTax,
-  getDeliveryFee,
-  getGrandTotal,
-} = useCart();
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    getSubtotal,
+    getTax,
+    getDeliveryFee,
+    getGrandTotal,
+  } = useCart();
   const { colors } = useTheme();
 
   if (cartItems.length === 0) {
@@ -35,7 +34,7 @@ const CartScreen = ({ navigation }: any) => {
         </Text>
         <Button
           title="Start Shopping"
-          onPress={() => navigation.navigate('HomeTab')}
+          onPress={() => navigation.getParent()?.navigate('Home')}
           style={styles.shopButton}
         />
       </View>
@@ -61,14 +60,14 @@ const CartScreen = ({ navigation }: any) => {
         keyExtractor={(item) => item.productId}
         contentContainerStyle={styles.cartList}
       />
-      
+
       <CartSummary
         subtotal={subtotal}
         tax={tax}
         deliveryFee={deliveryFee}
         total={total}
       />
-      
+
       <View style={[styles.checkoutContainer, { backgroundColor: colors.surface }]}>
         <Button
           title={`Proceed to Checkout • ${total.toFixed(2)}`}
