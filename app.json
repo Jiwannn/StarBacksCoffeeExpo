@@ -5,7 +5,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.starbacks.coffee"
@@ -21,6 +23,9 @@
       "eas": {
         "projectId": "f362aec5-387b-45b2-8e02-510f0280f3e7"
       }
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
