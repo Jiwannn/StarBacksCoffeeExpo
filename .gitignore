@@ -1,3 +1,4 @@
 node_modules
 "scripts/serviceAccountKey.json" 
 .env"src/services/firebase.ts" 
+.expo/
