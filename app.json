@@ -4,18 +4,22 @@
     "slug": "starbackscoffeeexpo",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./src/assets/images/logo.jpg",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.starbacks.coffee"
+      "bundleIdentifier": "com.starbacks.coffee",
+      "icon": "./src/assets/images/logo.jpg"
     },
     "android": {
       "package": "com.anonymous.starbackscoffeeexpo",
+      "icon": "./src/assets/images/logo.jpg",
       "adaptiveIcon": {
-        "backgroundColor": "#333333"
+        "foregroundImage": "./src/assets/images/logo.jpg",
+        "backgroundColor": "#1E3932"
       }
     },
     "web": {},

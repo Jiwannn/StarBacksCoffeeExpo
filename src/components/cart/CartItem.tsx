@@ -6,8 +6,8 @@ import { formatPrice } from '../../../src/utils/helpers';
 
 interface CartItemProps {
   item: CartItemType;
-  onUpdateQuantity: (productId: string, quantity: number) => void;
-  onRemove: (productId: string) => void;
+  onUpdateQuantity: (cartItemId: string, quantity: number) => void;
+  onRemove: (cartItemId: string) => void;
 }
 
 export const CartItemComponent: React.FC<CartItemProps> = ({
@@ -24,26 +24,46 @@ export const CartItemComponent: React.FC<CartItemProps> = ({
         <Text style={[styles.name, { color: colors.text }]} numberOfLines={2}>
           {item.name}
         </Text>
+
+        {item.customization && (
+          <View style={[styles.customizationBadge, { backgroundColor: colors.border }]}>
+            <Text style={[styles.customizationText, { color: colors.textSecondary }]}>
+              {item.customization.size} • {item.customization.sugar} • {item.customization.milk}
+            </Text>
+            {item.customization.addOns.length > 0 && (
+              <Text style={[styles.customizationText, { color: colors.textSecondary }]}>
+                + {item.customization.addOns.map(a => a.name).join(', ')}
+              </Text>
+            )}
+            {item.customization.specialInstructions ? (
+              <Text style={[styles.customizationText, { color: colors.textSecondary }]} numberOfLines={1}>
+                Note: {item.customization.specialInstructions}
+              </Text>
+            ) : null}
+          </View>
+        )}
+
         <Text style={[styles.price, { color: colors.primary }]}>
           {formatPrice(item.price)}
         </Text>
+
         <View style={styles.quantityContainer}>
           <TouchableOpacity
             style={[styles.quantityButton, { backgroundColor: colors.border }]}
-            onPress={() => onUpdateQuantity(item.productId, item.quantity - 1)}
+            onPress={() => onUpdateQuantity(item.cartItemId, item.quantity - 1)}
           >
             <Text style={[styles.quantityButtonText, { color: colors.text }]}>-</Text>
           </TouchableOpacity>
           <Text style={[styles.quantity, { color: colors.text }]}>{item.quantity}</Text>
           <TouchableOpacity
             style={[styles.quantityButton, { backgroundColor: colors.border }]}
-            onPress={() => onUpdateQuantity(item.productId, item.quantity + 1)}
+            onPress={() => onUpdateQuantity(item.cartItemId, item.quantity + 1)}
           >
             <Text style={[styles.quantityButtonText, { color: colors.text }]}>+</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={() => onRemove(item.productId)} style={styles.removeButton}>
+      <TouchableOpacity onPress={() => onRemove(item.cartItemId)} style={styles.removeButton}>
         <Text style={[styles.removeText, { color: colors.error }]}>✕</Text>
       </TouchableOpacity>
     </View>
@@ -51,35 +71,18 @@ export const CartItemComponent: React.FC<CartItemProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    padding: 16,
-    borderBottomWidth: 1,
+  container: { flexDirection: 'row', padding: 16, borderBottomWidth: 1 },
+  image: { width: 80, height: 80, borderRadius: 12, resizeMode: 'cover' },
+  details: { flex: 1, marginLeft: 12 },
+  name: { fontSize: 14, fontWeight: '600', marginBottom: 4 },
+  customizationBadge: {
+    borderRadius: 8,
+    padding: 6,
+    marginBottom: 6,
   },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    resizeMode: 'cover',
-  },
-  details: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  name: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  customizationText: { fontSize: 11, marginBottom: 1 },
+  price: { fontSize: 16, fontWeight: 'bold', marginBottom: 8 },
+  quantityContainer: { flexDirection: 'row', alignItems: 'center' },
   quantityButton: {
     width: 28,
     height: 28,
@@ -87,20 +90,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  quantityButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  quantity: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginHorizontal: 12,
-  },
-  removeButton: {
-    padding: 8,
-  },
-  removeText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  quantityButtonText: { fontSize: 16, fontWeight: 'bold' },
+  quantity: { fontSize: 14, fontWeight: '600', marginHorizontal: 12 },
+  removeButton: { padding: 8 },
+  removeText: { fontSize: 18, fontWeight: 'bold' },
 });

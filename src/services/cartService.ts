@@ -1,12 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
-import { CartItem, Product } from '../types';
+import { CartItem, Product, Customization } from '../types';
 
 const CART_KEY = 'cart';
 
 export const cartService = {
-  // ----- Local storage (fallback when not logged in) -----
   async getLocalCart(): Promise<CartItem[]> {
     const cartJson = await AsyncStorage.getItem(CART_KEY);
     return cartJson ? JSON.parse(cartJson) : [];
@@ -16,7 +15,6 @@ export const cartService = {
     await AsyncStorage.setItem(CART_KEY, JSON.stringify(cart));
   },
 
-  // ----- Firestore storage (for logged‑in users) -----
   async getUserCart(userId: string): Promise<CartItem[]> {
     const docRef = doc(db, 'carts', userId);
     const docSnap = await getDoc(docRef);
@@ -28,14 +26,14 @@ export const cartService = {
     await setDoc(docRef, { items, updatedAt: new Date() }, { merge: true });
   },
 
-  // ----- Merge local cart into Firestore after login -----
   async syncCartAfterLogin(userId: string): Promise<CartItem[]> {
     const localCart = await this.getLocalCart();
     const firestoreCart = await this.getUserCart(userId);
-    // Merge: keep Firestore items, add any new local items
     const merged = [...firestoreCart];
     for (const localItem of localCart) {
-      const existingIndex = merged.findIndex(i => i.productId === localItem.productId);
+      const existingIndex = merged.findIndex(
+        i => i.cartItemId === localItem.cartItemId
+      );
       if (existingIndex !== -1) {
         merged[existingIndex].quantity += localItem.quantity;
       } else {
@@ -43,80 +41,80 @@ export const cartService = {
       }
     }
     await this.saveUserCart(userId, merged);
-    await this.saveLocalCart([]); // clear local after sync
+    await this.saveLocalCart([]);
     return merged;
   },
 
-  // ----- Core cart operations (handles both logged‑in and guest) -----
-  async addToCart(userId: string | null, product: Product, quantity: number = 1): Promise<CartItem[]> {
+  async addToCart(
+    userId: string | null,
+    product: Product,
+    quantity: number = 1,
+    customPrice?: number,
+    customization?: Customization
+  ): Promise<CartItem[]> {
+    const price = customPrice || product.price;
+    // Customized items get unique ID, non-customized merge by productId
+    const cartItemId = customization
+      ? `${product.id}_${Date.now()}`
+      : product.id;
+
     if (userId) {
       const cart = await this.getUserCart(userId);
-      const existingIndex = cart.findIndex(item => item.productId === product.id);
-      if (existingIndex !== -1) {
-        cart[existingIndex].quantity += quantity;
-      } else {
-        cart.push({
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          quantity,
-          imageUrl: product.imageUrl,
-        });
+      if (!customization) {
+        const existingIndex = cart.findIndex(item => item.cartItemId === product.id);
+        if (existingIndex !== -1) {
+          cart[existingIndex].quantity += quantity;
+          await this.saveUserCart(userId, cart);
+          return cart;
+        }
       }
+      cart.push({ cartItemId, productId: product.id, name: product.name, price, quantity, imageUrl: product.imageUrl, customization });
       await this.saveUserCart(userId, cart);
       return cart;
     } else {
       const cart = await this.getLocalCart();
-      const existingIndex = cart.findIndex(item => item.productId === product.id);
-      if (existingIndex !== -1) {
-        cart[existingIndex].quantity += quantity;
-      } else {
-        cart.push({
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          quantity,
-          imageUrl: product.imageUrl,
-        });
+      if (!customization) {
+        const existingIndex = cart.findIndex(item => item.cartItemId === product.id);
+        if (existingIndex !== -1) {
+          cart[existingIndex].quantity += quantity;
+          await this.saveLocalCart(cart);
+          return cart;
+        }
       }
+      cart.push({ cartItemId, productId: product.id, name: product.name, price, quantity, imageUrl: product.imageUrl, customization });
       await this.saveLocalCart(cart);
       return cart;
     }
   },
 
-  async removeFromCart(userId: string | null, productId: string): Promise<CartItem[]> {
+  async removeFromCart(userId: string | null, cartItemId: string): Promise<CartItem[]> {
     if (userId) {
       const cart = await this.getUserCart(userId);
-      const newCart = cart.filter(item => item.productId !== productId);
+      const newCart = cart.filter(item => item.cartItemId !== cartItemId);
       await this.saveUserCart(userId, newCart);
       return newCart;
     } else {
       const cart = await this.getLocalCart();
-      const newCart = cart.filter(item => item.productId !== productId);
+      const newCart = cart.filter(item => item.cartItemId !== cartItemId);
       await this.saveLocalCart(newCart);
       return newCart;
     }
   },
 
-  async updateQuantity(userId: string | null, productId: string, quantity: number): Promise<CartItem[]> {
+  async updateQuantity(userId: string | null, cartItemId: string, quantity: number): Promise<CartItem[]> {
+    if (quantity <= 0) return this.removeFromCart(userId, cartItemId);
     if (userId) {
       const cart = await this.getUserCart(userId);
-      const index = cart.findIndex(item => item.productId === productId);
+      const index = cart.findIndex(item => item.cartItemId === cartItemId);
       if (index !== -1) {
-        if (quantity <= 0) {
-          return await this.removeFromCart(userId, productId);
-        }
         cart[index].quantity = quantity;
         await this.saveUserCart(userId, cart);
       }
       return cart;
     } else {
       const cart = await this.getLocalCart();
-      const index = cart.findIndex(item => item.productId === productId);
+      const index = cart.findIndex(item => item.cartItemId === cartItemId);
       if (index !== -1) {
-        if (quantity <= 0) {
-          return await this.removeFromCart(null, productId);
-        }
         cart[index].quantity = quantity;
         await this.saveLocalCart(cart);
       }

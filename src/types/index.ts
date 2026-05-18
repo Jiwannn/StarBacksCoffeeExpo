@@ -36,12 +36,30 @@ export interface Product {
   updatedAt: Date;
 }
 
+export interface AddOnItem {
+  id: string;
+  name: string;
+  price: number;
+}
+
+export interface Customization {
+  size: string;
+  sizePrice: number;
+  sugar: string;
+  milk: string;
+  milkPrice: number;
+  addOns: AddOnItem[];
+  specialInstructions: string;
+}
+
 export interface CartItem {
+  cartItemId: string;
   productId: string;
   name: string;
   price: number;
   quantity: number;
   imageUrl: string;
+  customization?: Customization;
 }
 
 export interface Order {
