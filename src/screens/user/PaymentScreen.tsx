@@ -11,6 +11,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { orderService } from '../../services/orderService';
+import { paymentService } from '../../services/paymentService';
 import { Button } from '../../components/common/Button';
 import { GCASH_DETAILS } from '../../utils/constants';
 import { formatPrice } from '../../utils/helpers';
@@ -52,8 +53,19 @@ const PaymentScreen = ({ route, navigation }: any) => {
         }
       );
 
+      await paymentService.createPayment({
+        orderId,
+        userId: user!.id,
+        amount: total,
+        method: paymentMethod,
+        status: paymentMethod === 'cod' ? 'pending' : 'pending',
+      });
+
       await clearCart();
-      navigation.replace('OrderConfirmation', { orderId });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'OrderConfirmation', params: { orderId } }],
+      });
     } catch (error) {
       Alert.alert('Error', 'Failed to place order. Please try again.');
     } finally {

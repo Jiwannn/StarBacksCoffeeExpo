@@ -48,7 +48,7 @@ const AboutScreen = () => {
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { backgroundColor: colors.surface }]}>
-        <Image source={require('../../assets/images/logo.jpg')} style={styles.logo} />
+        <Image source={require('../../assets/images/icon.png')} style={styles.logo} />
         <Text style={[styles.title, { color: colors.primary }]}>About StarBacks</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           Where passion meets perfection in every cup

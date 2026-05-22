@@ -13,6 +13,7 @@ const lightColors = {
   surface: '#F2F0EB',
   text: '#1E3932',
   textSecondary: '#4A4A4A',
+  placeholder: '#AAAAAA',
   border: '#D4E9E2',
   error: '#C0392B',
   success: '#00704A',

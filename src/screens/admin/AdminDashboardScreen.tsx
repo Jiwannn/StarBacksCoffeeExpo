@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { orderService } from '../../services/orderService';
@@ -32,9 +33,11 @@ const AdminDashboardScreen = ({ navigation }: any) => {
   const { colors } = useTheme();
   const { logout } = useAuth();
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadDashboardData();
+    }, [])
+  );
 
   const loadDashboardData = async () => {
     try {
@@ -76,24 +79,25 @@ const AdminDashboardScreen = ({ navigation }: any) => {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { backgroundColor: colors.surface }]}>
+    <View style={[styles.outerContainer, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.primary }]}>
         <View style={styles.headerTop}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.primary }]}>Admin Dashboard</Text>
-            <Text style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
+            <Text style={[styles.headerTitle, { color: '#FFF' }]}>Admin Dashboard</Text>
+            <Text style={[styles.headerSubtitle, { color: '#D4E9E2' }]}>
               Welcome back, Administrator
             </Text>
           </View>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Ionicons name="log-out-outline" size={28} color={colors.error} />
+            <Ionicons name="log-out-outline" size={28} color="#FFF" />
           </TouchableOpacity>
         </View>
       </View>
+      <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={{ paddingTop: 16, paddingBottom: 30 }}>
 
       <AdminStats stats={stats} />
 
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface, marginTop: 16 }]}>
         <Text style={[styles.sectionTitle, { color: colors.primary }]}>Quick Actions</Text>
         <View style={styles.quickActions}>
           <TouchableOpacity
@@ -130,17 +134,20 @@ const AdminDashboardScreen = ({ navigation }: any) => {
           />
         ))}
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
   header: {
     padding: 20,
-    marginBottom: 16,
   },
   headerTop: {
     flexDirection: 'row',

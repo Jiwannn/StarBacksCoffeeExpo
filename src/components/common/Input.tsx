@@ -68,7 +68,7 @@ export const Input: React.FC<InputProps> = ({
             rightIconStyle,
             style,
           ]}
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={colors.placeholder}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           secureTextEntry={actualSecureTextEntry}

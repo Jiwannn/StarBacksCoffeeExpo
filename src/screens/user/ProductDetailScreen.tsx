@@ -54,12 +54,13 @@ const ProductDetailScreen = ({ route, navigation }: any) => {
       specialInstructions,
     };
 
-    await addToCart({
-      product,
-      quantity,
-      totalPrice: getTotalItemPrice(),
+    const cartProduct = {
+      ...product,
+      price: getTotalItemPrice(),
       customization,
-    } as any);
+    };
+
+    await addToCart(cartProduct, quantity);
     Alert.alert(
       'Added to Cart! ☕',
       `${quantity}x ${product.name} (${selectedSize.label}) added to your cart`,
@@ -99,18 +100,12 @@ const ProductDetailScreen = ({ route, navigation }: any) => {
         <Text style={[styles.basePrice, { color: colors.primary }]}>
           {formatPrice(product.price)}
         </Text>
-        <View style={styles.stockRow}>
-          <Text style={[styles.stockLabel, { color: colors.textSecondary }]}>Stock: </Text>
-          <Text style={[styles.stockValue, { color: product.stock > 0 ? '#4CAF50' : '#F44336' }]}>
-            {product.stock > 0 ? `${product.stock} available` : 'Out of stock'}
-          </Text>
-        </View>
         <Text style={[styles.description, { color: colors.textSecondary }]}>
           {product.description}
         </Text>
       </View>
 
-      {product.stock > 0 && (
+      {(product.stock === undefined || product.stock > 0) && (
         <>
           {/* Size */}
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
@@ -206,7 +201,7 @@ const ProductDetailScreen = ({ route, navigation }: any) => {
               <Text style={[styles.quantity, { color: colors.text }]}>{quantity}</Text>
               <TouchableOpacity
                 style={[styles.quantityButton, { backgroundColor: colors.border }]}
-                onPress={() => quantity < product.stock && setQuantity(quantity + 1)}
+                onPress={() => setQuantity(quantity + 1)}
               >
                 <Text style={[styles.quantityButtonText, { color: colors.text }]}>+</Text>
               </TouchableOpacity>

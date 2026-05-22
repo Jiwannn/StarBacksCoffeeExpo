@@ -14,7 +14,7 @@ import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Ionicons } from '@expo/vector-icons';
 
 const ProductListScreen = ({ route, navigation }: any) => {
-  const { category, title } = route.params || {};
+  const { category, title, search } = route.params || {};
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<'name' | 'price_asc' | 'price_desc'>('name');
@@ -38,15 +38,22 @@ const ProductListScreen = ({ route, navigation }: any) => {
   };
 
   const sortProducts = (productsToSort: Product[]) => {
+    const filtered = search
+      ? productsToSort.filter(p =>
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          p.description.toLowerCase().includes(search.toLowerCase())
+        )
+      : productsToSort;
+
     switch (sortBy) {
       case 'name':
-        return [...productsToSort].sort((a, b) => a.name.localeCompare(b.name));
+        return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
       case 'price_asc':
-        return [...productsToSort].sort((a, b) => a.price - b.price);
+        return [...filtered].sort((a, b) => a.price - b.price);
       case 'price_desc':
-        return [...productsToSort].sort((a, b) => b.price - a.price);
+        return [...filtered].sort((a, b) => b.price - a.price);
       default:
-        return productsToSort;
+        return filtered;
     }
   };
 
@@ -100,10 +107,15 @@ const ProductListScreen = ({ route, navigation }: any) => {
 
       {sortedProducts.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="cafe-outline" size={80} color={colors.textSecondary} />
-          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-            No products found in this category.
+          <Ionicons name="search-outline" size={80} color={colors.textSecondary} />
+          <Text style={[styles.emptyText, { color: colors.text }]}>
+            {search ? `No results found for "${search}"` : 'No products found in this category.'}
           </Text>
+          {search && (
+            <Text style={[styles.emptySubText, { color: colors.textSecondary }]}>
+              Try searching with a different keyword.
+            </Text>
+          )}
         </View>
       ) : (
         <FlatList
@@ -128,8 +140,9 @@ const styles = StyleSheet.create({
   sortButton: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, marginRight: 8 },
   sortText: { fontSize: 12, fontWeight: '500' },
   productList: { padding: 8 },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  emptyText: { fontSize: 16, marginTop: 16 },
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  emptyText: { fontSize: 16, marginTop: 16, fontWeight: '600', textAlign: 'center' },
+  emptySubText: { fontSize: 13, marginTop: 8, textAlign: 'center' },
 });
 
 export default ProductListScreen;

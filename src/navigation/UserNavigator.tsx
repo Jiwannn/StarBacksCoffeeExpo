@@ -15,6 +15,8 @@ import OrderConfirmationScreen from '../screens/user/OrderConfirmationScreen';
 import OrdersScreen from '../screens/user/OrdersScreen';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import AboutScreen from '../screens/user/AboutScreen';
+import NotificationsScreen from '../screens/user/NotificationsScreen';
+import ReviewScreen from '../screens/user/ReviewScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -33,6 +35,24 @@ const HomeStack = () => {
       <Stack.Screen name="ProductList" component={ProductListScreen} options={({ route }: any) => ({ title: route.params?.title || 'Products' })} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Product Details' }} />
       <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ title: 'Notifications', headerShown: false }} />
+      <Stack.Screen name="Review" component={ReviewScreen} options={{ title: 'Write a Review' }} />
+    </Stack.Navigator>
+  );
+};
+
+const ProductsStack = () => {
+  const { colors } = useTheme();
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.primary },
+        headerTintColor: '#FFF',
+        headerTitleStyle: { fontWeight: 'bold' },
+      }}
+    >
+      <Stack.Screen name="ProductsMain" component={ProductListScreen} options={{ title: 'Products' }} />
+      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Product Details' }} />
     </Stack.Navigator>
   );
 };
@@ -48,6 +68,7 @@ const OrdersStack = () => {
     >
       <Stack.Screen name="OrdersList" component={OrdersScreen} options={{ title: 'My Orders' }} />
       <Stack.Screen name="OrderConfirmation" component={OrderConfirmationScreen} options={{ title: 'Order Details' }} />
+      <Stack.Screen name="Review" component={ReviewScreen} options={{ title: 'Write a Review' }} />
     </Stack.Navigator>
   );
 };
@@ -94,6 +115,8 @@ const UserNavigator = () => {
           let iconName: keyof typeof Ionicons.glyphMap = 'home';
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Products') {
+            iconName = focused ? 'cafe' : 'cafe-outline';
           } else if (route.name === 'Orders') {
             iconName = focused ? 'receipt' : 'receipt-outline';
           } else if (route.name === 'Cart') {
@@ -109,8 +132,42 @@ const UserNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Orders" component={OrdersStack} />
+      <Tab.Screen
+        name="Home"
+        component={HomeStack}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            });
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Products"
+        component={ProductsStack}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Products' }],
+            });
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Orders"
+        component={OrdersStack}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Orders' }],
+            });
+          },
+        })}
+      />
       <Tab.Screen 
         name="Cart" 
         component={CartStack} 

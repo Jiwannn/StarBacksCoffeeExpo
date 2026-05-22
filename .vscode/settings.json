@@ -1,3 +1,9 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.referencedLibraries": [],
+    "java.import.exclusions": [
+        "**/node_modules/**",
+        "**/android/**",
+        "**/.expo/**"
+    ]
 }

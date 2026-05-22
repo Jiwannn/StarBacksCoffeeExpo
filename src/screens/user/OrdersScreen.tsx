@@ -70,6 +70,29 @@ const OrdersScreen = ({ navigation }: any) => {
       <Text style={[styles.orderTotal, { color: colors.primary }]}>
         {formatPrice(item.total)}
       </Text>
+      {item.status === 'delivered' && (
+        <View style={styles.reviewRow}>
+          {item.items.map((product, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.reviewButton, { borderColor: colors.primary }]}
+              onPress={(e) => {
+                e.stopPropagation();
+                navigation.navigate('Review', {
+                  orderId: item.id,
+                  productId: product.productId,
+                  productName: product.name,
+                });
+              }}
+            >
+              <Ionicons name="star-outline" size={14} color={colors.primary} />
+              <Text style={[styles.reviewText, { color: colors.primary }]}>
+                Review {product.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
     </TouchableOpacity>
   );
 
@@ -154,6 +177,27 @@ const styles = StyleSheet.create({
   orderTotal: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  reviewRow: {
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+    paddingTop: 10,
+    gap: 8,
+  },
+  reviewButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    alignSelf: 'flex-start',
+  },
+  reviewText: {
+    fontSize: 12,
+    fontWeight: '600',
   },
   emptyContainer: {
     flex: 1,

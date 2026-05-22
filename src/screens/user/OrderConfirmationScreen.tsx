@@ -6,13 +6,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
 import { orderService } from '../../services/orderService';
 import { Order } from '../../types';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { formatPrice, formatDate } from '../../utils/helpers';
 import { ORDER_STATUS } from '../../utils/constants';
-import { Ionicons } from '@expo/vector-icons';
 
 const OrderConfirmationScreen = ({ route, navigation }: any) => {
   const { orderId } = route.params;
@@ -134,6 +134,22 @@ const OrderConfirmationScreen = ({ route, navigation }: any) => {
         >
           <Text style={styles.trackButtonText}>Track Order</Text>
         </TouchableOpacity>
+        {order.status === 'delivered' && order.items.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.reviewButton, { borderColor: colors.primary }]}
+            onPress={() => navigation.navigate('Review', {
+              orderId: order.id,
+              productId: item.productId,
+              productName: item.name,
+            })}
+          >
+            <Ionicons name="star-outline" size={18} color={colors.primary} />
+            <Text style={[styles.reviewButtonText, { color: colors.primary }]}>
+              Review {item.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
         <TouchableOpacity
           style={[styles.shopButton, { borderColor: colors.primary }]}
           onPress={() => navigation.navigate('Home')}
@@ -172,6 +188,8 @@ const styles = StyleSheet.create({
   buttonContainer: { padding: 16, marginBottom: 30 },
   trackButton: { padding: 16, borderRadius: 12, alignItems: 'center', marginBottom: 12 },
   trackButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
+  reviewButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 14, borderRadius: 12, borderWidth: 1, marginBottom: 12, gap: 8 },
+  reviewButtonText: { fontSize: 14, fontWeight: '600' },
   shopButton: { padding: 16, borderRadius: 12, alignItems: 'center', borderWidth: 1 },
   shopButtonText: { fontSize: 16, fontWeight: 'bold' },
   errorText: { fontSize: 18, textAlign: 'center', marginTop: 50 },

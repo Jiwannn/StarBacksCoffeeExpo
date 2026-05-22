@@ -21,7 +21,6 @@ const CheckoutScreen = ({ navigation }: any) => {
     city: '',
     zipCode: '',
     phone: '+63',
-    email: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -53,9 +52,6 @@ const CheckoutScreen = ({ navigation }: any) => {
     const phoneValidation = validation.phone(formData.phone);
     if (!phoneValidation.isValid) newErrors.phone = phoneValidation.error || '';
     
-    const emailValidation = validation.email(formData.email);
-    if (!emailValidation.isValid) newErrors.email = emailValidation.error || '';
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -70,16 +66,6 @@ const CheckoutScreen = ({ navigation }: any) => {
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.section, { backgroundColor: colors.surface }]}>
         <Text style={[styles.sectionTitle, { color: colors.primary }]}>Contact Information</Text>
-        
-        <Input
-          label="Email Address"
-          value={formData.email}
-          onChangeText={(text) => setFormData({ ...formData, email: text })}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          error={errors.email}
-          placeholder="your@email.com"
-        />
         
         <Input
           label="Phone Number"

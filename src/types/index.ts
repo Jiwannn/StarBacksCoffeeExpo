@@ -30,7 +30,7 @@ export interface Product {
   description: string;
   imageUrl: string;
   category: 'hot' | 'cold' | 'frappe';
-  stock: number;
+  stock?: number;
   isAvailable: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -86,5 +86,28 @@ export interface Notification {
   message: string;
   type: 'order' | 'promotion' | 'system';
   isRead: boolean;
+  createdAt: Date;
+}
+
+export interface Payment {
+  id: string;
+  orderId: string;
+  userId: string;
+  amount: number;
+  method: 'gcash' | 'cod';
+  status: 'pending' | 'paid' | 'failed';
+  referenceNumber?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Review {
+  id: string;
+  userId: string;
+  productId: string;
+  orderId: string;
+  userName: string;
+  rating: number;
+  comment: string;
   createdAt: Date;
 }

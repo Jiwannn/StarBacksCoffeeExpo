@@ -23,7 +23,8 @@ export const cartService = {
 
   async saveUserCart(userId: string, items: CartItem[]): Promise<void> {
     const docRef = doc(db, 'carts', userId);
-    await setDoc(docRef, { items, updatedAt: new Date() }, { merge: true });
+    const sanitized = JSON.parse(JSON.stringify(items));
+    await setDoc(docRef, { items: sanitized, updatedAt: new Date() }, { merge: true });
   },
 
   async syncCartAfterLogin(userId: string): Promise<CartItem[]> {

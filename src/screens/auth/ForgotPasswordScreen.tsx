@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
   StyleSheet,
-  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { useTheme } from '../../context/ThemeContext';
+import { Input } from '../../components/common/Input';
+import { Button } from '../../components/common/Button';
 
 export default function ForgotPasswordScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const { colors } = useTheme();
 
   const handleReset = async () => {
     if (!email) {
@@ -33,84 +36,52 @@ export default function ForgotPasswordScreen({ navigation }: any) {
   };
 
   return (
-    <ImageBackground
-      source={require('../../assets/images/coffee-bg.jpg')} // optional – you can use a local image
-      style={styles.container}
-      resizeMode="cover"
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <LinearGradient
-        colors={['rgba(51,51,51,0.9)', 'rgba(0,0,0,0.8)']}
-        style={styles.gradient}
-      >
-        <View style={styles.content}>
-          <Text style={styles.title}>Reset Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#aaa"
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={[styles.title, { color: colors.primary }]}>Reset Password</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            Enter your email and we'll send you a reset link
+          </Text>
+        </View>
+
+        <View style={[styles.formContainer, { backgroundColor: colors.surface }]}>
+          <Input
+            label="Email Address"
             value={email}
             onChangeText={setEmail}
-            autoCapitalize="none"
             keyboardType="email-address"
+            autoCapitalize="none"
+            placeholder="Enter your email"
           />
-          <TouchableOpacity style={styles.button} onPress={handleReset} disabled={loading}>
-            <Text style={styles.buttonText}>{loading ? 'Sending...' : 'Send Reset Email'}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>Back to Login</Text>
-          </TouchableOpacity>
+
+          <Button
+            title={loading ? 'Sending...' : 'Send Reset Email'}
+            onPress={handleReset}
+            loading={loading}
+            style={styles.button}
+          />
+
+          <Button
+            title="Back to Login"
+            onPress={() => navigation.goBack()}
+            variant="outline"
+          />
         </View>
-      </LinearGradient>
-    </ImageBackground>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  gradient: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  content: {
-    backgroundColor: 'rgba(64,64,64,0.9)',
-    borderRadius: 20,
-    padding: 20,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FF6600',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    backgroundColor: '#333',
-    color: '#FFF',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#FF6600',
-  },
-  button: {
-    backgroundColor: '#FF6600',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  buttonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  backText: {
-    color: '#FF6600',
-    textAlign: 'center',
-    fontSize: 14,
-  },
+  container: { flex: 1 },
+  scrollContainer: { flexGrow: 1, justifyContent: 'center', padding: 20 },
+  headerContainer: { alignItems: 'center', marginBottom: 30 },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 8 },
+  subtitle: { fontSize: 14, textAlign: 'center' },
+  formContainer: { borderRadius: 20, padding: 20 },
+  button: { marginBottom: 12 },
 });

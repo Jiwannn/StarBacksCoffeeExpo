@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { orderService } from '../../services/orderService';
+import { notificationService } from '../../services/notificationService';
 import { Order } from '../../types';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { formatPrice, formatDate } from '../../utils/helpers';
@@ -41,6 +42,14 @@ const AdminOrderDetailScreen = ({ route, navigation }: any) => {
     setUpdating(true);
     try {
       await orderService.updateOrderStatus(orderId, newStatus);
+      if (newStatus === 'delivered') {
+        await orderService.updatePaymentStatus(orderId, 'paid');
+      }
+      await notificationService.sendOrderStatusNotification(
+        order!.userId,
+        order!.orderNumber,
+        newStatus
+      );
       await loadOrder();
       Alert.alert('Success', `Order status updated to ${newStatus}`);
     } catch (error) {

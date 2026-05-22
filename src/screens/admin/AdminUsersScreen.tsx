@@ -115,6 +115,12 @@ const AdminUsersScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.primary }]}>
+        <Text style={styles.headerTitle}>Manage Users</Text>
+        <Text style={styles.headerSubtitle}>
+          {users.length} registered {users.length === 1 ? 'user' : 'users'}
+        </Text>
+      </View>
       <FlatList
         data={users}
         renderItem={renderUser}
@@ -140,11 +146,25 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     alignItems: 'center',
   },
+  header: {
+    padding: 20,
+    paddingTop: 16,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#FFF',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: '#D4E9E2',
+  },
   userAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#FF6600',
+    backgroundColor: '#00704A',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,

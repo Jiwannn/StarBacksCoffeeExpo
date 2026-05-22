@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../../src/context/ThemeContext';
@@ -6,7 +7,7 @@ import { formatPrice } from '../../../src/utils/helpers';
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: string;
+  icon: keyof typeof Ionicons.glyphMap;
   color: string;
 }
 
@@ -16,7 +17,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color }) => {
   return (
     <View style={[styles.card, { backgroundColor: colors.surface }]}>
       <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
-        <Text style={[styles.icon, { color }]}>{icon}</Text>
+        <Ionicons name={icon} size={22} color={color} />
       </View>
       <Text style={[styles.value, { color: colors.text }]}>{value}</Text>
       <Text style={[styles.title, { color: colors.textSecondary }]}>{title}</Text>
@@ -37,12 +38,12 @@ interface AdminStatsProps {
 
 export const AdminStats: React.FC<AdminStatsProps> = ({ stats }) => {
   const statCards = [
-    { title: 'Total Orders', value: stats.totalOrders, icon: '📦', color: '#4CAF50' },
-    { title: 'Revenue', value: formatPrice(stats.totalRevenue), icon: '💰', color: '#FF9800' },
-    { title: 'Products', value: stats.totalProducts, icon: '☕', color: '#2196F3' },
-    { title: 'Users', value: stats.totalUsers, icon: '👥', color: '#9C27B0' },
-    { title: 'Pending', value: stats.pendingOrders, icon: '⏳', color: '#FFC107' },
-    { title: 'Completed', value: stats.completedOrders, icon: '✅', color: '#4CAF50' },
+    { title: 'Total Orders', value: stats.totalOrders, icon: 'receipt-outline' as const, color: '#4CAF50' },
+    { title: 'Revenue', value: formatPrice(stats.totalRevenue), icon: 'cash-outline' as const, color: '#FF9800' },
+    { title: 'Products', value: stats.totalProducts, icon: 'cube-outline' as const, color: '#2196F3' },
+    { title: 'Users', value: stats.totalUsers, icon: 'people-outline' as const, color: '#9C27B0' },
+    { title: 'Pending', value: stats.pendingOrders, icon: 'time-outline' as const, color: '#FFC107' },
+    { title: 'Completed', value: stats.completedOrders, icon: 'checkmark-circle-outline' as const, color: '#4CAF50' },
   ];
 
   return (
@@ -73,15 +74,12 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
-  },
-  icon: {
-    fontSize: 20,
   },
   value: {
     fontSize: 18,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../context/ThemeContext';
 import { orderService } from '../../services/orderService';
 import { Order } from '../../types';
@@ -19,9 +20,11 @@ const AdminOrdersScreen = ({ navigation }: any) => {
   const [filter, setFilter] = useState<string>('all');
   const { colors } = useTheme();
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadOrders();
+    }, [])
+  );
 
   const loadOrders = async () => {
     try {
