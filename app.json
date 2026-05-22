@@ -3,6 +3,12 @@
     "name": "StarBacks Coffee",
     "slug": "starbackscoffeeexpo",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f362aec5-387b-45b2-8e02-510f0280f3e7"
+    },
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "userInterfaceStyle": "light",
@@ -27,9 +33,15 @@
       "expo-font",
       "expo-status-bar",
       "expo-video",
-      "expo-system-ui"
+      "expo-system-ui",
+      "expo-updates"
     ],
     "owner": "jarnelalngog",
+    "extra": {
+      "eas": {
+        "projectId": "f362aec5-387b-45b2-8e02-510f0280f3e7"
+      }
+    },
     "extra": {
       "eas": {
         "projectId": "f362aec5-387b-45b2-8e02-510f0280f3e7"
