@@ -59,6 +59,16 @@ export const cartService = {
       ? `${product.id}_${Date.now()}`
       : product.id;
 
+    const newItem: CartItem = JSON.parse(JSON.stringify({
+      cartItemId,
+      productId: product.id,
+      name: product.name,
+      price,
+      quantity,
+      imageUrl: product.imageUrl || '',
+      ...(customization ? { customization } : {}),
+    }));
+
     if (userId) {
       const cart = await this.getUserCart(userId);
       if (!customization) {
@@ -69,7 +79,7 @@ export const cartService = {
           return cart;
         }
       }
-      cart.push({ cartItemId, productId: product.id, name: product.name, price, quantity, imageUrl: product.imageUrl, customization });
+      cart.push(newItem);
       await this.saveUserCart(userId, cart);
       return cart;
     } else {
@@ -82,7 +92,7 @@ export const cartService = {
           return cart;
         }
       }
-      cart.push({ cartItemId, productId: product.id, name: product.name, price, quantity, imageUrl: product.imageUrl, customization });
+      cart.push(newItem);
       await this.saveLocalCart(cart);
       return cart;
     }

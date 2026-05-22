@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword, 
   signOut 
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, query, where } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { User } from '../types';
 
@@ -100,5 +100,12 @@ export const authService = {
 
   async deleteUser(userId: string): Promise<void> {
     await deleteDoc(doc(db, 'users', userId));
+    // Also delete user's cart
+    try { await deleteDoc(doc(db, 'carts', userId)); } catch {}
+    // Also delete user's notifications
+    try {
+      const notifSnap = await getDocs(query(collection(db, 'notifications'), where('userId', '==', userId)));
+      await Promise.all(notifSnap.docs.map(d => deleteDoc(d.ref)));
+    } catch {}
   }
 };
