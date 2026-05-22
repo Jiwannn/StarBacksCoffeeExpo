@@ -15,6 +15,7 @@
       "icon": "./src/assets/images/logo.jpg"
     },
     "android": {
+      "minSdkVersion": 24,
       "package": "com.anonymous.starbackscoffeeexpo",
       "icon": "./src/assets/images/logo.jpg",
       "adaptiveIcon": {
@@ -29,7 +30,9 @@
       }
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-status-bar",
+      "expo-video"
     ]
   }
 }
