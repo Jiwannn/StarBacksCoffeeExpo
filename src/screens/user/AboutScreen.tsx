@@ -26,14 +26,14 @@ const AboutScreen = () => {
       name: 'Jeff Daren Rebote',
       role: 'UI/UX Designer',
       image: require('../../assets/images/jeff.png'),
-      facebook: 'https://www.facebook.com/MonerAnggay21',
+      facebook: null,
       instagram: 'https://www.instagram.com/yacooo0',
     },
     {
       name: 'Diether Capadugan',
       role: 'Frontend Developer',
       image: require('../../assets/images/diether.png'),
-      facebook: 'https://www.facebook.com/miggy.limbaga.5',
+      facebook: null,
       instagram: null,
     },
   ];

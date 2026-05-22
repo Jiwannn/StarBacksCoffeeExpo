@@ -32,9 +32,11 @@ const PaymentScreen = ({ route, navigation }: any) => {
       const deliveryFee = getDeliveryFee();
       const total = getGrandTotal();
 
+      const sanitizedCartItems = JSON.parse(JSON.stringify(cartItems));
+
       const orderId = await orderService.createOrder(
         user!.id,
-        cartItems,
+        sanitizedCartItems,
         subtotal,
         tax,
         deliveryFee,
@@ -42,13 +44,13 @@ const PaymentScreen = ({ route, navigation }: any) => {
         paymentMethod,
         {
           id: Date.now().toString(),
-          firstName: shippingAddress.firstName,
-          lastName: shippingAddress.lastName,
-          street: shippingAddress.address,
-          city: shippingAddress.city,
-          province: shippingAddress.city,
-          zipCode: shippingAddress.zipCode,
-          phone: shippingAddress.phone,
+          firstName: shippingAddress.firstName || '',
+          lastName: shippingAddress.lastName || '',
+          street: shippingAddress.address || '',
+          city: shippingAddress.city || '',
+          province: shippingAddress.city || '',
+          zipCode: shippingAddress.zipCode || '',
+          phone: shippingAddress.phone || '',
           isDefault: true,
         }
       );
