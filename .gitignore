@@ -1,4 +1,7 @@
-node_modules
-"scripts/serviceAccountKey.json" 
-.env"src/services/firebase.ts" 
+node_modules/
+scripts/serviceAccountKey.json
+.env
+src/services/firebase.ts
 .expo/
+android/
+ios/
