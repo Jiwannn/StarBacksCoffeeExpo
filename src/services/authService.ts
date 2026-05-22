@@ -99,13 +99,58 @@ export const authService = {
   },
 
   async deleteUser(userId: string): Promise<void> {
-    await deleteDoc(doc(db, 'users', userId));
-    // Also delete user's cart
-    try { await deleteDoc(doc(db, 'carts', userId)); } catch {}
-    // Also delete user's notifications
     try {
-      const notifSnap = await getDocs(query(collection(db, 'notifications'), where('userId', '==', userId)));
-      await Promise.all(notifSnap.docs.map(d => deleteDoc(d.ref)));
-    } catch {}
+      console.log('🗑️ Starting user deletion process for:', userId);
+      
+      // Delete user document from users collection
+      await deleteDoc(doc(db, 'users', userId));
+      console.log('✅ User document deleted from Firestore');
+      
+      // Delete user's cart
+      try {
+        await deleteDoc(doc(db, 'carts', userId));
+        console.log('✅ User cart deleted');
+      } catch (error) {
+        console.log('⚠️ Cart deletion failed (may not exist):', error);
+      }
+      
+      // Delete user's notifications
+      try {
+        const notifSnap = await getDocs(query(collection(db, 'notifications'), where('userId', '==', userId)));
+        if (notifSnap.docs.length > 0) {
+          await Promise.all(notifSnap.docs.map(d => deleteDoc(d.ref)));
+          console.log(`✅ ${notifSnap.docs.length} notification(s) deleted`);
+        }
+      } catch (error) {
+        console.log('⚠️ Notification deletion failed:', error);
+      }
+      
+      // Delete user's reviews
+      try {
+        const reviewSnap = await getDocs(query(collection(db, 'reviews'), where('userId', '==', userId)));
+        if (reviewSnap.docs.length > 0) {
+          await Promise.all(reviewSnap.docs.map(d => deleteDoc(d.ref)));
+          console.log(`✅ ${reviewSnap.docs.length} review(s) deleted`);
+        }
+      } catch (error) {
+        console.log('⚠️ Review deletion failed:', error);
+      }
+      
+      // Delete user's orders
+      try {
+        const orderSnap = await getDocs(query(collection(db, 'orders'), where('userId', '==', userId)));
+        if (orderSnap.docs.length > 0) {
+          await Promise.all(orderSnap.docs.map(d => deleteDoc(d.ref)));
+          console.log(`✅ ${orderSnap.docs.length} order(s) deleted`);
+        }
+      } catch (error) {
+        console.log('⚠️ Order deletion failed:', error);
+      }
+      
+      console.log('✅ User and all related data deleted successfully');
+    } catch (error) {
+      console.error('❌ Error during user deletion:', error);
+      throw new Error(`Failed to delete user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 };

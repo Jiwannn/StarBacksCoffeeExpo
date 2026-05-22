@@ -61,8 +61,17 @@ const AdminUsersScreen = () => {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            await authService.deleteUser(userId);
-            await loadUsers();
+            try {
+              setLoading(true);
+              await authService.deleteUser(userId);
+              console.log('✅ User deleted successfully:', userId);
+              Alert.alert('Success', 'User deleted successfully');
+              await loadUsers();
+            } catch (error) {
+              console.error('❌ Delete user error:', error);
+              Alert.alert('Error', `Failed to delete user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+              setLoading(false);
+            }
           },
         },
       ]
