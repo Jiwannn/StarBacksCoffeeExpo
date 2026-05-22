@@ -23,16 +23,17 @@
       }
     },
     "web": {},
-    "extra": {
-      "eas": {
-        "projectId": "f362aec5-387b-45b2-8e02-510f0280f3e7"
-      }
-    },
     "plugins": [
       "expo-font",
       "expo-status-bar",
       "expo-video",
       "expo-system-ui"
-    ]
+    ],
+    "owner": "jarnelalngog",
+    "extra": {
+      "eas": {
+        "projectId": "f362aec5-387b-45b2-8e02-510f0280f3e7"
+      }
+    }
   }
 }

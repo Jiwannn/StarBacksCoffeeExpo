@@ -34,7 +34,7 @@ const CartScreen = ({ navigation }: any) => {
         </Text>
         <Button
           title="Start Shopping"
-          onPress={() => navigation.getParent()?.navigate('Home')}
+          onPress={() => navigation.getParent()?.navigate('Products')}
           style={styles.shopButton}
         />
       </View>

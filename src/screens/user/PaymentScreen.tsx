@@ -62,12 +62,10 @@ const PaymentScreen = ({ route, navigation }: any) => {
       });
 
       await clearCart();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'OrderConfirmation', params: { orderId } }],
-      });
-    } catch (error) {
-      Alert.alert('Error', 'Failed to place order. Please try again.');
+      navigation.navigate('OrderConfirmation', { orderId });
+    } catch (error: any) {
+      console.error('Place order error:', error);
+      Alert.alert('Error', error?.message || 'Failed to place order. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -66,7 +66,13 @@ const SignupScreen = ({ navigation }: any) => {
     const success = await signup(formData);
     setLoading(false);
 
-    if (!success) {
+    if (success) {
+      Alert.alert(
+        'Account Created! 🎉',
+        'Your account has been successfully created. Welcome to StarBacks Coffee!',
+        [{ text: 'Continue', onPress: () => {} }]
+      );
+    } else {
       Alert.alert('Error', 'Failed to create account. Email may already be in use.');
     }
   };
