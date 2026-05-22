@@ -25,22 +25,24 @@ export const orderService = {
     shippingAddress: Address
   ): Promise<string> {
     const orderNumber = `SB-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const sanitizedItems = JSON.parse(JSON.stringify(items));
+    const sanitizedAddress = JSON.parse(JSON.stringify(shippingAddress));
     const order: Omit<Order, 'id'> = {
       userId,
-      items,
+      items: sanitizedItems,
       subtotal,
       tax,
       deliveryFee,
       total,
       status: 'pending',
       paymentMethod,
-      paymentStatus: paymentMethod === 'cod' ? 'pending' : 'pending',
-      shippingAddress,
+      paymentStatus: 'pending',
+      shippingAddress: sanitizedAddress,
       orderNumber,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const docRef = await addDoc(collection(db, 'orders'), order);
+    const docRef = await addDoc(collection(db, 'orders'), JSON.parse(JSON.stringify(order)));
     return docRef.id;
   },
 
