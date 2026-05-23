@@ -21,28 +21,20 @@ const CLOUDINARY_CLOUD_NAME = 'ds3k3thy2';
 const CLOUDINARY_UPLOAD_PRESET = 'expo_uploads';
 
 const uploadToCloudinary = async (uri: string): Promise<string> => {
-  const formData = new FormData();
-  formData.append('file', {
-    uri,
-    type: 'image/jpeg',
-    name: 'profile.jpg',
-  } as any);
-  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-  const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-    {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  );
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error?.message || 'Upload failed');
-  return data.secure_url;
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`);
+    xhr.onload = () => {
+      const data = JSON.parse(xhr.responseText);
+      if (data.secure_url) resolve(data.secure_url);
+      else reject(new Error(data.error?.message || 'Upload failed'));
+    };
+    xhr.onerror = () => reject(new Error('Network error during upload'));
+    const formData = new FormData();
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    formData.append('file', { uri, type: 'image/jpeg', name: 'profile.jpg' } as any);
+    xhr.send(formData);
+  });
 };
 
 const ProfileScreen = ({ navigation }: any) => {
